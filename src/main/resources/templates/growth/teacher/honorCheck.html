@@ -1,0 +1,553 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Right</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta http-equiv="Access-Control-Allow-Origin" content="*">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="icon" href="/resources/favicon.ico">
+    <link rel="stylesheet" href="resources/layui/css/layui.css" th:href="@{/resources/layui/css/layui.css}" media="all"/>
+    <link rel="stylesheet" th:href="@{/resources/css/public.css}" media="all"/>
+    <link rel="stylesheet" th:href="@{/resources/layui_ext/dtree/dtree.css}" media="all"/>
+    <link rel="stylesheet" th:href="@{/resources/layui_ext/dtree/font/dtreefont.css}" media="all"/>
+    <style>
+        input#search_gradeTree_select_input_id {
+            border-radius: 10px;
+            height: 30px;
+            margin-top: 4px;
+        }
+        input#gradeTree_select_input_id {
+            border-radius: 10px;
+            height: 30px;
+            margin-top: 4px;
+        }
+
+        input.layui-input.layui-unselect {
+            border-radius: 10px;
+            height: 30px;
+            margin-top: 4px;
+        }
+        .myskin{
+            background-color:transparent;//透明（可根据需求自己调整）
+        opacity: 0.3;//透明度
+        }
+    </style>
+</head>
+<body>
+<!--查询条件-->
+<fieldset class="layui-elem-field layui-field-title" style="margin-top: 15px;">
+    <legend>搜索条件</legend>
+</fieldset>
+<form action="" method="post" id="searchFrm" lay-filter="searchFrm" class="layui-form">
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">所属年级</label>
+            <div class="layui-input-inline">
+                <input type="hidden" name="grades" id="search_grades">
+                <ul id="search_gradeTree" class="dtree" data-id="0"></ul>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">学年</label>
+            <div class="layui-input-inline" >
+                <select name="year" id="select_year">
+                    <option value="" ></option>
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-inline">
+            <label class="layui-form-label">学生姓名</label>
+            <div class="layui-input-inline">
+                <input type="text" name="studentname" id="studentname" class="layui-input input-radius" placeholder="请输入学生姓名">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">审核状态</label>
+            <div class="layui-input-inline" >
+                <select name="ypass" >
+                    <option value="" ></option>
+                    <option value="0" >未通过</option>
+                    <option value="1" >审核通过</option>
+                    <option value="2" >待审核</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-input-block" style="text-align: center;padding-right: 15%;">
+            <button type="button" class="layui-btn  layui-btn-radius" lay-submit="" lay-filter="doSearch"><i
+                    class="layui-icon layui-icon-search layui-icon-normal"></i>查询
+            </button>
+            <button type="reset" onclick="javascript:document.getElementById('search_grades').value=''"
+                    class="layui-btn  layui-btn-radius layui-btn-warm"><i
+                    class="layui-icon layui-icon-refresh"></i><span>重置</span>
+            </button>
+        </div>
+    </div>
+</form>
+<div>
+    <table class="layui-hide" id="honorTable" lay-filter="honorTable"></table>
+    <div id="honorToolBar" style="display: none">
+        <button type="button" lay-event="batchDelete" class="layui-btn layui-btn-sm layui-btn-danger layui-btn-radius">
+            <i class="layui-icon layui-icon-delete"></i>批量删除
+        </button>
+    </div>
+    <div id="honorRowBar" style="display: none;">
+        <button type="button" lay-event="show" class="layui-btn layui-btn-sm layui-btn-normal layui-btn-radius"><i
+                class="layui-icon layui-icon-tips"></i>审核
+        </button>
+        <button type="button" lay-event="delete"  class="layui-btn layui-btn-sm layui-btn-danger layui-btn-radius"><i
+                class="layui-icon layui-icon-delete"></i>删除
+        </button>
+    </div>
+</div>
+
+
+<!--查看出版项目成绩弹出层-->
+<div id="showhonorDiv" style="display: none;padding: 10px">
+    <h3 id="honor_title" style="text-align: center"></h3>
+    <div style="text-align: left;margin-top: 2%">
+        年级：<span id="grades"></span>&nbsp;
+        姓名：<span id="name"></span>&nbsp;
+        学号：<span id="snumber"></span>
+        提交时间：<span id="honor_createtime"></span>
+        额外材料：<span id="wordpath"></span>
+        <a id="wordid"  href="javascript:;"  style="color: deepskyblue">查看文件</a>
+        <blockquote class="layui-elem-quote">
+            <span  th:utext="${honorRule.contents}"></span>
+        </blockquote>
+    </div>
+    <hr class="layui-border-green">
+    <form action="" method="post" class="layui-form" id="updateFrm" lay-filter="dataFrm2">
+        <input name="id" type="hidden">
+        <input name="ypass" type="hidden">
+        <input name="snumber" type="hidden">
+        <div class="layui-col-md12 layui-col-xs12">
+            <div class="layui-row layui-col-space10">
+                <div class="layui-col-md9 layui-col-xs7">
+                    <div class="layui-form-item magt3">
+                        <label class="layui-form-label">学年</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="year" disabled  style="background:lavender"  readonly="true"  autocomplete="off" class="layui-input  input-radius" >
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">项目名称</label>
+                        <div class="layui-input-block">
+                            <input type="text"  style="background:lavender" readonly="true" name="honorname" disabled autocomplete="off" class="layui-input  input-radius" >
+                        </div>
+                    </div>
+                        <label class="layui-form-label">荣誉级别</label>
+                        <div class="layui-input-block" >
+                            <input type="text" name="honortype" style="background:lavender" disabled readonly="true" autocomplete="off"
+                                   class="layui-input input-radius" >
+                        </div>
+
+                </div>
+                <div class="layui-col-md3 layui-col-xs5">
+                    <div class="layui-upload-list thumbBox2 mag0 magt3" id="photo-list">
+                        <input type="hidden" name="imgpath" id="honorpath2" value="images/noDefaultImage.jpg">
+                        <img title="点击放大图片" style="height: 150px;width: 160px;" class="layui-upload-img thumbImg2 img_sp"  src="/file/showImageByPath?path=images/noDefaultImage.jpg">
+                    </div>
+                </div>
+                <img alt="" style="display:none;" id="displayImg" src="" height="500" width="500"/>
+
+            </div>
+            <div class="layui-form-item magb0">
+
+                <div class="layui-inline">
+                    <label class="layui-form-label">组队形式</label>
+                    <div class="layui-input-inline" >
+                        <input type="text" name="authortype" style="background:lavender" disabled readonly="true"  autocomplete="off"
+                               class="layui-input input-radius">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">自评分数</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="doscore" style="background:lavender" disabled readonly="true"  autocomplete="off"
+                               class="layui-input input-radius" >
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <div class=" layui-form-item layui-form-text">
+                        <label class="layui-form-label">备注信息</label>
+                        <div class="layui-input-inline">
+                            <textarea name="text" style="background:lavender" readonly="true" disabled class="layui-textarea"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <div class=" layui-form-item layui-form-text">
+                        <label class="layui-form-label">驳回备注</label>
+                        <div class="layui-input-inline">
+                            <textarea name="why" style="background:lavender" readonly="true" disabled class="layui-textarea"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block" style="text-align: center;padding-right: 7%">
+                <button type="button" class="layui-btn layui-btn-radius" lay-submit="" lay-filter="doSubmitPass" id="doSubmitPass"><i
+                        class="layui-icon layui-icon-edit layui-icon-normal"></i>审核通过
+                </button>
+                <button type="button" class="layui-btn layui-btn-radius  layui-btn-warm" lay-submit="" lay-filter="doSubmitFail" id="doSubmitFail"><i
+                        class="layui-icon layui-icon-delete layui-icon-normal"></i>审核拒绝
+                </button>
+
+            </div>
+        </div>
+    </form>
+</div>
+
+<script type="text/javascript" src="/resources/layui/layui.js"></script>
+
+<script type="text/javascript">
+
+    var tableIns;
+    layui.extend({
+        dtree: '/resources/layui_ext/dtree/dtree'
+    }).use(['jquery', 'form', 'layer','table','upload','dtree'], function () {
+        var $ = layui.jquery;
+        var form = layui.form;
+        var layer = layui.layer;
+        var table = layui.table;
+        var upload = layui.upload;
+        var dtree = layui.dtree;
+        //初始化表格 加载数据
+        tableIns = table.render({
+            elem: "#honorTable",
+            title: "学年成绩提交记录",
+            url: "/growth/honor/loadAllHonorScore",
+            toolbar: "#honorToolBar",
+            page: true,
+            cols: [ [
+                {type:'checkbox',fixed:'left'},
+                {field: 'id', title: 'ID', align: 'center',width:'50'},
+                {field: 'year', title: '学年', align: 'center',width:'150'},
+                {field: 'grades', title: '年级', align: 'center',width:'110'},
+                {field: 'studentname', title: '姓名', align: 'center',width:'100'},
+                {field: 'snumber', title: '学号', align: 'center',width:'150'},
+                {field: 'honorname', title: '荣誉项目名', align: 'center',width:'100'},
+                {field: 'honortype', title: '荣誉级别', align: 'center',width:'100'},
+                {field: 'authortype', title: '组队形式', align: 'center',width:'100'},
+                {field: 'text', title: '备注信息', align: 'center',width:'150'},
+                {field: 'wordpath', title: 'word材料', align: 'center',width:'150', templet:function(data){
+                        var state=data.wordpath;
+                        if(state!=null){
+                            return '<span style="color: green">额外材料已上传</span>';
+                        }else {
+                            return '<span style="color: orangered">额外材料未上传</span>';
+                        }
+                    }},
+                {field: 'imgpath', title: '材料图片', align: 'center',width:'120', templet:function(d){
+                        return '<img width=40 height=40 src=/file/showImageByPath?path='+d.imgpath+ ' />';
+                    }},
+                {field: 'honordate', title: '提交日期', align: 'center',width:'180'},
+                {field: 'doscore', title: '自评分数', align: 'center',width:'100'},
+                {field: 'why', title: '驳回原因', align: 'center',width:'100'},
+                {field: 'ypass', title: '审核状态', align: 'center',width:'100', templet:function(data){
+                        var state=data.ypass;
+                        if(state=="2"){
+                            return '<span style="color: orangered">待审核</span>';
+                        }else if(state=="1") {
+                            return '<span style="color: green">审核通过</span>';
+                        }else{
+                            return '<span style="color: red">未通过</span>';
+                        }
+                    }},
+                {fixed: 'right', title: '操作', toolbar: '#honorRowBar', align: 'center',width:'180'}
+            ] ]
+        });
+
+
+        $(function () {
+            $('#photo-list img').on('click', function () {
+                var img = new Image();
+                img.src = "/file/showImageByPath?path="+document.getElementById("honorpath2").value;
+                var height = img.height + 50; //获取图片高度
+                var width = img.width; //获取图片宽度
+                var imgHtml = "<img src='" + img.src + "' width='100%' height='100%'/>";
+                //弹出层
+                layer.open({
+                    type: 1,
+                    shade: 0.8,
+                    offset: 'auto',
+                    area: [450 + 'px', 500 + 'px'],
+                    shadeClose: true,
+                    scrollbar: false,
+                    title: "材料图片预览", //不显示标题
+                    content: imgHtml, //捕获的元素，注意：最好该指定的元素要存放在body最外层，否则可能被其它的相对元素所影响
+                    cancel: function () {
+                        //layer.msg('捕获就是从页面已经存在的元素上，包裹layer的结构', { time: 5000, icon: 6 });
+                    }
+                });
+            })
+        });
+
+
+        //初始化学年下拉列表
+        $.get("/growth/year/loadAllYear",function (res) {
+            var data = res.data;
+            var dom = $("#select_year");
+            var html = '<option value="0">请选择对应学年</option>';
+            $.each(data,function (index, item) {
+                html += '<option value="'+item.year+'">'+item.year+'</option>';
+            })
+            dom.html(html);
+            //重新渲染下拉列表
+            form.render("select");
+        });
+        //初始化年级查询条件的下拉树
+        var selectTree = dtree.renderSelect({
+            elem: "#search_gradeTree",
+            width: "100%", // 可以在这里指定树的宽度来填满div
+            dataStyle: "layuiStyle", //使用layui风格的数据格式
+            dataFormat: "list",     //配置data的风格为list
+            response: {message: "msg", statusCode: 0},  //修改response中返回数据的定义
+            url: "/grade/loadGradeManagerLeftTreeJson" // 使用url加载（可与data加载同时存在）
+        });
+        //监听下拉树点击的方法
+        dtree.on("node(search_gradeTree)", function (obj) {
+            $("#search_grades").val(obj.param.context);
+            console.log(obj.param.context);
+        });
+        //监控模糊查询按钮事件
+        form.on("submit(doSearch)", function (data) {
+            tableIns.reload({
+                where: data.field,
+                page: {
+                    curr: 1
+                }
+            });
+            return false;
+        });
+        //审核通过事件
+        form.on("submit(doSubmitPass)", function (data) {
+            var ypass=data.field.ypass;
+            console.log(ypass);
+            var Verifystate0="0";  //审核未通过
+            var Verifystate2="2"; //待审核
+            if(ypass==Verifystate2){
+                layer.confirm('你确定通过审核吗？', {icon: 3, title: '提示'}, function (index) {
+                    $.post("/growth/honor/updateVerify1", {id: data.field.id,snumber: data.field.snumber,year: data.field.year,doscore: data.field.doscore},function (res) {
+                        if (res.code == 200) {
+                            tableIns.reload({
+                                where:"",
+                            });
+                        }
+                        layer.msg(res.msg);
+                    });
+                    layer.close(index);
+                });
+            }else if(ypass==Verifystate0){
+                layer.confirm('这是您已经审核拒绝的数据,你确定通过审核吗？', {icon: 3, title: '提示'}, function (index) {
+                    $.post("/growth/honor/updateVerify1", {id: data.field.id,snumber: data.field.snumber,year: data.field.year,doscore: data.field.doscore},function (res) {
+                        if (res.code == 200) {
+                            tableIns.reload({
+                                where:"",
+                            });
+                        }
+                        layer.msg(res.msg);
+                    });
+                    layer.close(index);
+                });
+            }else{
+                layer.confirm('审核已经通过了，请勿重复操作哦 ', {icon: 3, title: '提示'}, function (index) {
+                    layer.close(index);
+                });
+            }
+            return false;
+        });
+        //审核拒绝事件
+        form.on("submit(doSubmitFail)", function (data) {
+            var ypass=data.field.ypass;
+            console.log(ypass);
+            var Verifystate1="1";  //审核通过
+            var Verifystate2="2"; //待审核
+            if(ypass==Verifystate2){
+                layer.prompt({
+                    formType: 2,
+                    value: '驳回！',
+                    title: '请输入驳回理由'
+                }, function(value, index, elem){
+                    layer.close(index);
+                    $.ajax({
+                        type: "post",
+                        url: "/growth/honor/updateVerify0",
+                        data: {
+                            "id": data.field.id,
+                            "snumber": data.field.snumber,
+                            "year": data.field.year,
+                            "why":value
+                        },
+                        async: true,
+                    });
+                    tableIns.reload({
+                        where:"",
+                    });
+                    layer.alert('驳回成功');
+                    location=location;
+                });
+
+            }else if(ypass==Verifystate1){
+                layer.prompt({
+                    formType: 2,
+                    value: '请输入驳回理由！',
+                    title: '审核通过数据'
+                }, function(value, index, elem){
+                    layer.close(index);
+                    $.ajax({
+                        type: "post",
+                        url: "/growth/honor/updateVerify0",
+                        data: {
+                            "id": data.field.id,
+                            "snumber": data.field.snumber,
+                            "year": data.field.year,
+                            "why":value
+                        },
+                        async: true,
+                    });
+                    tableIns.reload({
+                        where:"",
+                    });
+                    layer.alert('驳回成功');
+                    location=location;
+                });
+
+            }else{
+                layer.confirm('您已经审核拒绝过了，请勿重复操作哦 ', {icon: 3, title: '提示'}, function (index) {
+                    layer.close(index);
+                });
+            }
+            return false;
+        });
+
+        //监控工具条事件
+        table.on("toolbar(honorTable)", function (obj) {
+            switch (obj.event) {
+                case 'batchDelete':
+                    batchDelete();
+                    break;
+            };
+        });
+        //监控行工具条事件
+        table.on("tool(honorTable)", function (obj) {
+            //获取当前行数据
+            var data = obj.data;
+            switch (obj.event) {
+                case 'delete':
+                    deletehonor(data);
+                    break;
+                case 'show':
+                    showhonor(data);
+                    break;
+            };
+        });
+        //批量删除
+        function batchDelete() {
+            //得到选中行
+            var checkStatus = table.checkStatus('honorTable');
+            var dataLength = checkStatus.data.length;
+            if (dataLength>0){
+                layer.confirm('你确定要删除这些提交记录吗？',{icon: 3,title: '提示'},function (index) {
+                    //获取选中行数据
+                    var data = checkStatus.data;
+                    var ids = "";
+                    $.each(data,function (index, item) {
+                        if (index==0){
+                            ids+="ids="+item.id;
+                        }else {
+                            ids+="&ids="+item.id;
+                        }
+                    });
+                    $.post("/growth/honor/batchDeleteHonor",ids,function (res) {
+                        if (res.code==200){
+                            //重新刷新表格
+                            tableIns.reload({
+                                where:"",
+                            });
+                        }
+                        layer.msg(res.msg);
+                    });
+                    layer.close(index);
+                });
+            }else {
+                layer.msg("请选中操作行")
+            }
+        }
+
+
+        //打开查看的弹出层
+        function showhonor(data) {
+            mainIndex = layer.open({
+                type:1,
+                content:$("#showhonorDiv"),
+                area:['800px','550px'],
+                title:'荣誉详情',
+                end: function(){
+                    window.location.reload();//写在这里的话不管是否提交成功都会刷新这个页面
+                    return false;
+                },
+                success:function () {
+                    $("#grades").html(data.grades);
+                    $("#name").html(data.studentname);
+                    $("#honor_createtime").html(data.honordate);
+                    $("#snumber").html(data.snumber);
+                    $('#wordid').on('click', function() {
+                        if(data.wordpath!=null) {
+                            //iframe层
+                            layer.open({
+                                type: 2,
+                                skin: 'layui-layer-molv',
+                                title: '额外材料详情',
+                                fix: false,
+                                shadeClose: true,
+                                maxmin: true,
+                                area: ['600px', '500px'],
+                                content: "/wordPreview?wordpath=" + data.wordpath,//iframe的url
+                            });
+                        }else{
+                            layer.msg("额外材料未上传！");
+                        }
+                    });
+                    if(data.wordpath!=null){
+                        $("#wordpath").html("已提交");
+                    }else{
+                        $("#wordpath").html("未提交");
+                    }
+                    //图片进行回显
+                    $(".thumbImg2").attr("src",'/file/showImageByPath?path='+data.imgpath);
+                    //装载新的数据
+                    form.val("dataFrm2",data);
+                }
+            });
+        }
+        //删除
+        function deleteHonor(data) {
+            layer.confirm('你确定要删除【' + data.studentname + '】这个学生【' + data.year + '】这一年数据吗？', {icon: 3, title: '提示'}, function (index) {
+                $.post("/growth/honor/deleteHonor", {id: data.id},function (res) {
+                    if (res.code == 200) {
+                        tableIns.reload({
+                            where:"",
+                        });
+                    }
+                    layer.msg(res.msg);
+                });
+                layer.close(index);
+            });
+        }
+    });
+
+
+</script>
+</body>
+
+</html>

@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Right</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta http-equiv="Access-Control-Allow-Origin" content="*">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="icon" href="/resources/favicon.ico">
+    <link rel="stylesheet" href="resources/layui/css/layui.css" th:href="@{/resources/layui/css/layui.css}" media="all"/>
+    <link rel="stylesheet" th:href="@{/resources/css/public.css}" media="all"/>
+    <link rel="stylesheet" th:href="@{/resources/layui_ext/dtree/dtree.css}" media="all"/>
+    <link rel="stylesheet" th:href="@{/resources/layui_ext/dtree/font/dtreefont.css}" media="all"/>
+    <style>
+        input.layui-input.layui-unselect {
+            border-radius: 10px;
+            height: 30px;
+            margin-top: 4px;
+        }
+    </style>
+</head>
+<body>
+<form action="" method="post" class="layui-form" id="dataFrm" lay-filter="dataFrm" style="padding-right: 7%">
+    <div class="layui-form-item" style="margin-top: 20px; align-items: center">
+        <div class="layui-collapse">
+            <div class="layui-colla-item">
+                <h2 class="layui-colla-title">评分细则</h2>
+                <div class="layui-colla-content layui-show">
+                    <span  th:utext="${paperRule.contents}"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">学年</label>
+            <div class="layui-input-inline" >
+                <select name="year" id="select_year">
+                    <option value="" >请选择对应学年</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">论文名称</label>
+            <div class="layui-input-block">
+                <input type="text" name="papername" lay-verify="required" autocomplete="off" class="layui-input input-radius" placeholder="请输入论文名称">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">论文数目</label>
+            <div class="layui-input-inline" >
+                <select name="number" lay-verify="required">
+                    <option value="" ></option>
+                    <option value="1篇">1篇</option>
+                    <option value="2篇">2篇</option>
+                    <option value="3篇">3篇</option>
+                    <option value="4篇">4篇</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+
+        <div class="layui-inline">
+            <label class="layui-form-label">论文类型</label>
+            <div class="layui-input-inline" >
+                <select name="papertype" lay-verify="required">
+                    <option value=""></option>
+                    <option value="核心期刊" >核心期刊</option>
+                    <option value="非核心期刊" >非核心期刊</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-inline" >
+            <label class="layui-form-label">作者类型</label>
+            <div class="layui-input-inline" >
+                <select name="authortype" lay-verify="required" >
+                    <option value="" ></option>
+                    <option value="第一作者" >第一作者</option>
+                    <option value="第二作者" >第二作者</option>
+                    <option value="第三作者" >第三作者</option>
+                    <option value="第四作者" >第四作者</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">自评分数</label>
+            <div class="layui-input-block">
+                <input type="text" name="doscore" lay-verify="required|number" autocomplete="off"
+                       class="layui-input input-radius" placeholder="请输入应得分数">
+            </div>
+        </div>
+    </div>
+    <div class=" layui-form-item layui-form-text">
+        <label class="layui-form-label">备注信息</label>
+        <div class="layui-input-block">
+            <textarea name="text" placeholder="请输入内容" class="layui-textarea"></textarea>
+        </div>
+    </div>
+
+    <div class="layui-inline" >
+        <label class="layui-form-label">材料上传</label>
+        <div class="layui-upload-list thumbBox mag0 magt3">
+            <input type="hidden" name="imgpath" id="paperpath" value="images/noDefaultImage.jpg">
+            <img  class="layui-upload-img thumbImg" src="/file/showImageByPath?path=images/noDefaultImage.jpg">
+        </div>
+    </div>
+
+    <div class="layui-inline">
+        <button type="button" class="layui-btn layui-btn-radius" lay-submit="" lay-filter="doSubmit" id="doSubmit"><i
+                class="layui-icon layui-icon-upload-circle layui-icon-normal"></i>提交
+        </button>
+        <button type="reset"  class="layui-btn  layui-btn-radius layui-btn-warm" id="reset"><i
+                class="layui-icon layui-icon-refresh"></i><span>重置</span>
+        </button>
+    </div>
+
+</form>
+<!--数据表格-->
+<div>
+    <table class="layui-hide" id="paperTable" lay-filter="paperTable"></table>
+    <div id="paperToolBar" style="display: none">
+        <div style="color: black">提交记录</div>
+    </div>
+    <div id="paperRowBar" style="display: none;">
+        <button type="button" lay-event="update"  class="layui-btn layui-btn-sm layui-btn-radius"><i
+                class="layui-icon layui-icon-edit"></i>修改
+        </button>
+        <button type="button" lay-event="checkWhy"  class="layui-btn layui-btn-sm layui-btn-danger layui-btn-radius"><i
+                class="layui-icon layui-icon-reply-fill"></i>驳回详情
+        </button>
+        <button type="button" lay-event="wordSubmit"  class="layui-btn layui-btn-sm layui-btn-primary layui-btn-radius"><i
+                class="layui-icon layui-icon-upload-circle"></i>材料补充
+        </button>
+    </div>
+</div>
+<!--查看出版论文成绩弹出层-->
+<div id="checkWhyDiv" style="display: none;padding: 10px">
+    <div style="color: black"><span id="why"></span></div>
+</div>
+<!--提交word额外证明弹出层-->
+<div id="wordDiv" style="display: none;padding: 10px">
+    <form action="" method="post" class="layui-form" id="wordForm" lay-filter="wordForm">
+        <div class="layui-inline">
+            学年：<span id="year"></span>&nbsp;
+            <div class="layui-input-inline" >
+                <input type="hidden" name="year" >
+            </div>
+        </div>
+        <div class="layui-form-item" >
+            <div style="color: black; font-min-size: small">提示：多次提交会覆盖之前提交的，每一学年提交一份word</div>
+        </div>
+        <input type="hidden" name="wordpath">
+        <div class="layui-upload">
+            <button class="layui-btn layui-btn-normal" id="testList" type="button">选择文件</button>
+            <button class="layui-btn" id="testListAction" type="button">开始上传</button>
+            <div class="layui-upload-list">
+                <table class="layui-table">
+                    <thead>
+                    <tr><th>文件名</th>
+                        <th>大小</th>
+                        <th>状态</th>
+                        <th>操作</th>
+                    </tr></thead>
+                    <tbody id="demoList"></tbody>
+                </table>
+            </div>
+
+        </div>
+
+        <button type="button " style="display: none" class="layui-btn layui-btn-radius" lay-submit="" lay-filter="wordSubmitDiv" id="wordSubmitDiv"><i
+                class="layui-icon layui-icon-upload-circle layui-icon-normal"></i>提交
+        </button>
+
+    </form>
+</div>
+<!--修改弹出层-->
+<div id="addOrUpdateDiv" style="display: none;padding: 10px;padding-right: 5%">
+    <form action="" method="post" class="layui-form" id="updateFrm" lay-filter="dataFrm2">
+        <input type="hidden" name="id">
+        <div class="layui-col-md12 layui-col-xs12">
+            <div class="layui-row layui-col-space10">
+                <div class="layui-col-md9 layui-col-xs7">
+                    <div class="layui-form-item magt3">
+                        <label class="layui-form-label">学年</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="year" disabled lay-verify="required" autocomplete="off" class="layui-input input-radius" placeholder="请输入学年">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">论文名称</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="papername" lay-verify="required" autocomplete="off" class="layui-input input-radius" placeholder="请输入论文名称">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">论文数目</label>
+                        <div class="layui-input-inline" >
+                            <select name="number" lay-verify="required">
+                                <option value="" ></option>
+                                <option value="1篇">1篇</option>
+                                <option value="2篇">2篇</option>
+                                <option value="3篇">3篇</option>
+                                <option value="4篇">4篇</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md3 layui-col-xs5">
+                    <div class="layui-upload-list thumbBox2 mag0 magt3">
+                        <input type="hidden" name="imgpath" id="paperpath2" value="images/noDefaultImage.jpg">
+                        <img title="点击上传图片" style="height: 150px;width: 160px;" class="layui-upload-img thumbImg2" src="/file/showImageByPath?path=images/noDefaultImage.jpg">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item magb0">
+                <div class="layui-inline">
+                    <label class="layui-form-label">论文类型</label>
+                    <div class="layui-input-inline" >
+                        <select name="papertype" lay-verify="required">
+                            <option value=""></option>
+                            <option value="核心期刊" >核心期刊</option>
+                            <option value="非核心期刊" >非核心期刊</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">作者类型</label>
+                    <div class="layui-input-inline" >
+                        <select name="authortype" lay-verify="required" >
+                            <option value="" ></option>
+                            <option value="第一作者" >第一作者</option>
+                            <option value="第二作者" >第二作者</option>
+                            <option value="第三作者" >第三作者</option>
+                            <option value="第四作者" >第四作者</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">自评分数</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="doscore" lay-verify="required|number" autocomplete="off"
+                               class="layui-input input-radius" placeholder="请输入应得分数">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <div class=" layui-form-item layui-form-text">
+                        <label class="layui-form-label">备注信息</label>
+                        <div class="layui-input-inline">
+                            <textarea name="text" placeholder="请输入内容" class="layui-textarea"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block" style="text-align: center;padding-right: 7%">
+                <button type="button" class="layui-btn layui-btn-radius" lay-submit="" lay-filter="doSubmitUpdate" id="doSubmitUpdate"><i
+                        class="layui-icon layui-icon-edit layui-icon-normal"></i>修改
+                </button>
+                <button type="reset" class="layui-btn layui-btn-radius layui-btn-warm"><i
+                        class="layui-icon layui-icon-refresh"></i><span>重置</span>
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+<script type="text/javascript" src="/resources/layui/layui.js"></script>
+
+<script type="text/javascript">
+
+    var tableIns;
+    layui.use(['jquery', 'form', 'layer','table','upload'], function () {
+        var $ = layui.jquery;
+        var form = layui.form;
+        var layer = layui.layer;
+        var table = layui.table;
+        var upload = layui.upload;
+        //初始化表格 加载数据
+        tableIns = table.render({
+            elem: "#paperTable",
+            title: "学年成绩提交记录",
+            url: "/growth/paper/loadpaperScore",
+            toolbar: "#paperToolBar",
+            page: false,
+            cols: [ [
+                {field: 'id', title: 'ID', align: 'center',width:'50'},
+                {field: 'year', title: '学年', align: 'center',width:'140'},
+                {field: 'papername', title: '论文名称', align: 'center',width:'100'},
+                {field: 'number', title: '论文数目', align: 'center',width:'100'},
+                {field: 'papertype', title: '论文类型', align: 'center',width:'100'},
+                {field: 'authortype', title: '作者类型', align: 'center',width:'100'},
+                {field: 'text', title: '备注信息', align: 'center',width:'150'},
+                {field: 'wordpath', title: 'word文档', align: 'center',width:'150', templet:function(data){
+                        var state=data.wordpath;
+                        if(state!=null){
+                            return '<span style="color: green">额外材料已上传</span>';
+                        }else {
+                            return '<span style="color: orangered">额外材料未上传</span>';
+                        }
+                    }},
+                {field: 'imgpath', title: '材料图片', align: 'center',width:'120', templet:function(d){
+                        return '<img width=40 height=40 src=/file/showImageByPath?path='+d.imgpath+ ' />';
+                    }},
+                {field: 'paperdate', title: '提交日期', align: 'center',width:'180'},
+                {field: 'doscore', title: '自评分数', align: 'center',width:'100'},
+                {field: 'why', title: '驳回原因', align: 'center',width:'100'},
+                {field: 'ypass', title: '审核状态', align: 'center',width:'100', templet:function(data){
+                        var state=data.ypass;
+                        if(state=="2"){
+                            return '<span style="color: orangered">待审核</span>';
+                        }else if(state=="1") {
+                            return '<span style="color: green">审核通过</span>';
+                        }else{
+                            return '<span style="color: red">未通过</span>';
+                        }
+                    }},
+                {fixed: 'right', title: '操作', toolbar: '#paperRowBar', align: 'center',width:'320'}
+            ] ]
+        });
+
+        //监控行工具条事件
+        table.on("tool(paperTable)", function (obj) {
+            //获取当前行数据
+            var data = obj.data;
+            switch (obj.event) {
+                case 'update':
+                    updatepaper(data);
+                    break;
+                case 'checkWhy':
+                    checkWhyDiv(data);
+                    break;
+                case 'wordSubmit':
+                    word(data);
+                    break;
+            };
+        });
+        //文件上传
+        upload.render({
+            elem: '.thumbBox',
+            url: '/file/uploadFile',
+            acceptMime:'image/*',
+            field:'mf',
+            method : "post",
+            done: function(res, index, upload){
+                var path=res.path;
+                $('.thumbImg').attr('src','/file/showImageByPath?path='+path);
+                $('.thumbBox').css("background","#fff");
+                //给隐藏域赋值
+                $("#paperpath").val(path);
+            }
+        });
+        //文件上传
+        upload.render({
+            elem: '.thumbBox2',
+            url: '/file/uploadFile',
+            acceptMime:'image/*',
+            field:'mf',
+            method : "post",
+            done: function(res, index, upload){
+                var path=res.path;
+                $('.thumbImg2').attr('src','/file/showImageByPath?path='+path);
+                $('.thumbBox2').css("background","#fff");
+                //给隐藏域赋值
+                $("#paperpath2").val(path);
+            }
+        });
+        //表单提交
+        form.on("submit(wordSubmitDiv)",function (data) {
+            $.post("/growth/paper/wordSubmit",data.field,function (res) {
+                if (res.code==200){
+                    tableIns.reload();
+                }
+                layer.msg(res.msg);
+            });
+            return false;
+        })
+        //初始化学年下拉列表
+        $.get("/growth/year/loadAllYear",function (res) {
+            var data = res.data;
+            var dom = $("#select_year");
+            var html = '<option value="0">请选择对应学年</option>';
+            $.each(data,function (index, item) {
+                html += '<option value="'+item.year+'">'+item.year+'</option>';
+            })
+            dom.html(html);
+            //重新渲染下拉列表
+            form.render("select");
+        });
+
+
+        //表单提交
+        form.on("submit(doSubmit)",function (data) {
+            $.post("/growth/paper/addpaperScore",data.field,function (res) {
+                if (res.code==200){
+                    tableIns.reload();
+                    $("#reset").click();
+                    //设置默认为无图片
+                    $(".thumbImg").attr("src",'/file/showImageByPath?path=images/noDefaultImage.jpg');
+                    $("#paperpath").val('/images/noDefaultImage.jpg');
+                }
+                layer.msg(res.msg);
+            });
+            return false;
+        })
+        var mainIndex;
+        var url;
+
+        //打开修改的弹出层
+        function updatepaper(data) {
+            var ypass = data.ypass;
+            var Verifystate1 = "1";  //审核通过
+            if (ypass == Verifystate1) {
+                layer.alert('该申请已经通过审核了，无法修改！', {
+                    icon: 5,
+                    title: "提示"
+                });
+            } else {
+                mainIndex = layer.open({
+                    type: 1,
+                    content: $("#addOrUpdateDiv"),
+                    area: ['700px', '500px'],
+                    title: '修改论文数据',
+                    success: function () {
+                        //图片进行回显
+                        $(".thumbImg2").attr("src", '/file/showImageByPath?path=' + data.imgpath);
+                        //装载新的数据
+                        form.val("dataFrm2", data);
+                        url = "paper/updatepaper";
+                    }
+                });
+            }
+        }
+        //打开驳回理由弹出层
+        function checkWhyDiv(data) {
+            mainIndex = layer.open({
+                type:1,
+                content:$("#checkWhyDiv"),
+                area:['300px','280px'],
+                title:'详情',
+                success:function () {
+                    $("#why").html(data.why);
+                }
+            });
+        }
+        //打开word额外材料补充弹出层
+        function word(data) {
+            mainIndex = layer.open({
+                type:1,
+                content:$("#wordDiv"),
+                area:['600px','350px'],
+                title:'word材料上传',
+                success:function () {
+                    var _form=$('#wordForm');
+                    _form.find('input[name="year"]').val(data.year);
+                    $("#year").html(data.year);
+                }
+            });
+        }
+
+        form.on("submit(doSubmitUpdate)",function (data) {
+            $.post(url,data.field,function (res) {
+                if (res.code==200){
+                    tableIns.reload();
+                }
+                layer.msg(res.msg);
+                layer.close(mainIndex);
+            });
+            return false;
+        });
+
+    });
+</script>
+<script>
+    var files=[];
+    //JavaScript代码区域
+    layui.use(['element','upload'], function(){
+        var $ = layui.jquery
+            ,upload = layui.upload;
+
+        //上传
+        //多文件列表示例
+        var demoListView = $('#demoList')
+            ,uploadListIns = upload.render({
+            elem: '#testList'
+            ,url: '/file/uploadSource' //改成您自己的上传接口
+            ,accept: 'file'
+            ,exts: 'doc|docx' //允许上传的文件类型
+            ,multiple: true
+            ,auto: false
+            ,bindAction: '#testListAction'
+            ,choose: function(obj){
+                var files = this.files = obj.pushFile(); //将每次选择的文件追加到文件队列
+                // 文件数量超限提醒
+                if (Object.keys(files).length > 1) {
+                    layer.msg('限制上传一个word文档证明材料');
+                    return false;
+                }
+                //读取本地文件
+                obj.preview(function(index, file, result){
+                    var tr = $(['<tr id="upload-'+ index +'">'
+                        ,'<td>'+ file.name +'</td>'
+                        ,'<td>'+ (file.size/1024).toFixed(1) +'kb</td>'
+                        ,'<td>等待上传</td>'
+                        ,'<td>'
+                        ,'<button class="layui-btn layui-btn-xs demo-reload layui-hide">重传</button>'
+                        ,'<button class="layui-btn layui-btn-xs layui-btn-danger demo-delete">删除</button>'
+                        ,'</td>'
+                        ,'</tr>'].join(''));
+
+                    //单个重传
+                    tr.find('.demo-reload').on('click', function(){
+                        obj.upload(index, file);
+                    });
+
+                    //删除
+                    tr.find('.demo-delete').on('click', function(){
+                        delete files[index]; //删除对应的文件
+                        tr.remove();
+                        uploadListIns.config.elem.next()[0].value = ''; //清空 input file 值，以免删除后出现同名文件不可选
+                    });
+
+                    demoListView.append(tr);
+                });
+            }
+            ,done: function(res, index, upload){
+                if (res.code == 0){
+                    files.push({"fileName":res.filename,"fileUrl":res.fileUrl,"fileSize":res.fileSize});//,"fileUrl":res.fileUrl
+                    var json = JSON.stringify(files);
+                    //将上传的文件信息加入到集合中并转换成json字符串
+                    $("#fileJson").attr("value",json);
+
+                    var fileUrl = res.fileUrl;
+                    var _form=$('#wordForm');
+                    _form.find('input[name="wordpath"]').val(fileUrl);
+                    $("#wordSubmitDiv").click();
+                    var tr = demoListView.find('tr#upload-'+ index)
+                        ,tds = tr.children();
+                    tds.eq(2).html('<span style="color: #5FB878;">上传成功</span>');
+                    tds.eq(3).html('<span>'+fileUrl+'</span>');
+                    tds.eq(4).html(''); //清空操作
+                    return delete this.files[index]; //删除文件队列已经上传成功的文件
+                }
+                this.error(index, upload);
+            }
+            ,error: function(index, upload){
+                var tr = demoListView.find('tr#upload-'+ index)
+                    ,tds = tr.children();
+                tds.eq(2).html('<span style="color: #FF5722;">上传失败</span>');
+                tds.eq(3).find('.demo-reload').removeClass('layui-hide'); //显示重传
+            }
+        });
+    });
+
+</script>
+</body>
+
+</html>

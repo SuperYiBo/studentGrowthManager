@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>师生意见建议</title>
+    <meta name="renderer" content="webkit">
+
+    <link rel="icon" href="/favicon.ico">
+    <link rel="stylesheet" href="/resources/layui/css/layui.css" media="all" />
+    <link rel="stylesheet" href="/resources/css/public.css" media="all" />
+    <!-- 引入 ECharts 文件 -->
+    <script src="/resources/js/echarts.js"></script>
+    <style type="text/css">
+            a:link{text-decoration: none; color: #0e0e0e; font-size: 20px; font-family: 微软雅黑;}
+            a:visited{ color:green;}
+             a:hover{text-decoration: underline; color: #ff001e; font-size: 19px;}
+             a:active{text-decoration: blink; color: yellow;}
+             </style>
+   </head>
+<body >
+
+<div class="layui-carousel" id="test1">
+    <div carousel-item>
+        <img src="/resources/images/6.png">
+        <img src="/resources/images/5.png">
+            <img src="/resources/images/1.png">
+
+        <!--像素600*1856刚好-->
+
+        <div><img src="/resources/images/3.png"></div>
+
+    </div>
+</div>
+
+
+<hr class="layui-border-cyan"><hr class="layui-border-cyan">
+
+<div class="Layui-row">
+    <div class="layui-col-xs12">
+        <!-- 公告 -->
+        <blockquote class="layui-elem-quote">桂林电子科技大学后勤集团原料采购系统公告</blockquote>
+        <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+            <legend>公告信息</legend>
+        </fieldset>
+
+        <div class="layui-bg-gray" style="padding: 30px;">
+            <div class="layui-row layui-col-space15">
+                <div class="layui-col-md6">
+                    <div class="layui-card">
+                        <div class="layui-card-header">采购公告1 </div>
+                        <div class="layui-card-body" >
+                            <p id="notice1">
+                                这是一条采购公告<br>
+                                这是一条采购公告
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md6">
+                    <div class="layui-card">
+                        <div class="layui-card-header" >采购公告2</div>
+                        <div class="layui-card-body" >
+                            <p id="notice2">
+                                这是一条采购公告<br>
+                                这是一条采购公告
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md6">
+                    <div class="layui-card">
+                        <div class="layui-card-header">采购公告3</div>
+                        <div class="layui-card-body" >
+                            <p id="notice3">
+                            这是一条采购公告<br>
+                            这是一条采购公告
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md6">
+                    <div class="layui-card">
+                        <div class="layui-card-header">采购公告4</div>
+                        <div class="layui-card-body" >
+                            <p id="notice4">
+                                这是一条采购公告<br>
+                                这是一条采购公告
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="layui-col-xs12">
+        <!-- 友情链接  -->
+        <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+            <legend>友情链接</legend>
+        </fieldset>
+        <div class="Layui-row"><a href="info/1151/56428.htm" target="_blank" title="我校计算机科学学科首次进入ESI全球排名前1%（图）"><span>05-15</span><span> 我校计算机科学学科首次进入ESI全球排名前1%（图）</span> </a></div>
+            <div class="Layui-row"><a href="info/1151/56406.htm" target="_blank" title="【学习习近平系列重要讲话精神】学校深入学习习近平总书记视察清华大学重要讲话精神就“学校十四五规划”问题开展研讨"><span>05-13</span><span> 【学习习近平系列重要讲话精神】学校深入学习习近平总书记视察清华大学重要讲话精神就“学校十四五规划”问题开展研讨</span> </a></div>
+            <div class="Layui-row"><a href="info/1151/56405.htm" target="_blank" title="【学习习近平系列重要讲话精神】学校深入学习习近平总书记视察清华大学重要讲话精神就“科技创新高质量发展”问题开展研讨"><span>05-13</span><span> 【学习习近平系列重要讲话精神】学校深入学习习近平总书记视察清华大学重要讲话精神就“科技创新高质量发展”问题开展研讨</span> </a></div>
+            <div class="Layui-row"><a href="info/1151/56404.htm" target="_blank" title="【学习习近平系列重要讲话精神】学校深入学习习近平总书记视察清华大学重要讲话精神就“改革”问题开展研讨"><span>05-13</span><span> 【学习习近平系列重要讲话精神】学校深入学习习近平总书记视察清华大学重要讲话精神就“改革”问题开展研讨</span> </a></div>
+            <div class="Layui-row"><a href="info/1151/56402.htm" target="_blank" title="【党史学习教育】大学生艺术团以红色舞蹈《湘江红》致敬湘江战役党史（图）"><span>05-13</span><span> 【党史学习教育】大学生艺术团以红色舞蹈《湘江红》致敬湘江战役党史（图）</span> </a></div>
+            <div class="Layui-row"><a href="info/1151/56396.htm" target="_blank" title="我校校友、中国电信桂林分公司总经理岑立峰一行来校交流（图）"><span>05-13</span><span> 我校校友、中国电信桂林分公司总经理岑立峰一行来校交流（图）</span> </a></div>
+            <div class="Layui-row"><a href="info/1151/56395.htm" target="_blank" title="自治区教育厅巡视员唐耀华一行来校调研学生创业工作（图）"><span>05-13</span><span> 自治区教育厅巡视员唐耀华一行来校调研学生创业工作（图）</span> </a></div>
+            <div class="Layui-row"><a href="info/1151/56387.htm" target="_blank" title="我校艺术硕士专业学位授权点顺利通过专项评估"><span>05-13</span><span> 我校艺术硕士专业学位授权点顺利通过专项评估</span> </a></div>
+            <div class="Layui-row"><a href="info/1151/56386.htm" target="_blank" title="柬埔寨教育、青年和体育部向国立马德望大学孔子学院汉语教师颁发感谢信（图）"><span>05-13</span><span> 柬埔寨教育、青年和体育部向国立马德望大学孔子学院汉语教师颁发感谢信（图）</span> </a></div>
+            <div class="Layui-row"><a href="info/1151/56384.htm" target="_blank" title="​广西科技大学党委书记赵君、校长李思敏一行到校交流（图）"><span>05-13</span><span> ​广西科技大学党委书记赵君、校长李思敏一行到校交流（图）</span> </a></div>
+            <div class="Layui-row"><a href="info/1151/56382.htm" target="_blank" title="【学习习近平系列重要讲话精神】学校深入学习习近平总书记视察清华大学重要讲话精神就“改革”问题开展研讨"><span>05-13</span><span> 【学习习近平系列重要讲话精神】学校深入学习习近平总书记视察清华大学重要讲话精神就“改革”问题开展研讨</span> </a></div>
+            <div class="Layui-row"><a href="info/1151/56381.htm" target="_blank" title="【学习习近平系列重要讲话精神】学校深入学习习近平总书记视察清华大学重要讲话精神就“发展”问题开展研讨(图）"><span>05-13</span><span> 【学习习近平系列重要讲话精神】学校深入学习习近平总书记视察清华大学重要讲话精神就“发展”问题开展研讨(图）</span> </a></div>
+
+
+
+
+    </div>
+
+</div>
+
+<hr class="layui-border-cyan"><hr class="layui-border-cyan">
+<!--suggest look-->
+<fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
+    <legend>师生反馈信息一览表</legend>
+</fieldset>
+<div class="layui-row">
+    <div class="layui-col-xs6">
+        <div class="grid-demo grid-demo-bg1">
+
+            <ul class="layui-timeline">
+                <li class="layui-timeline-item">
+                    <i class="layui-icon layui-timeline-axis"></i>
+                    <div class="layui-timeline-content layui-text">
+                        <h3 class="layui-timeline-title">反馈信息</h3>
+
+                        <p id="sugget1">
+
+                        </p>
+                    </div>
+                </li>
+
+                <li class="layui-timeline-item">
+                    <i class="layui-icon layui-timeline-axis"></i>
+                    <div class="layui-timeline-content layui-text">
+                        <h3 class="layui-timeline-title">反馈信息</h3>
+                        <p id="sugget2">
+
+                        </p>
+                    </div>
+                </li>
+                <li class="layui-timeline-item">
+                    <i class="layui-icon layui-timeline-axis"></i>
+                    <div class="layui-timeline-content layui-text">
+                        <h3 class="layui-timeline-title">反馈信息</h3>
+                        <p id="sugget3">
+
+                        </p>
+                    </div>
+                </li>
+                <li class="layui-timeline-item">
+                    <i class="layui-icon layui-timeline-axis"></i>
+                    <div class="layui-timeline-content layui-text">
+                        <h3 class="layui-timeline-title">反馈信息</h3>
+                        <p id="sugget4">
+
+                        </p>
+                    </div>
+                </li>
+                <li class="layui-timeline-item">
+                    <i class="layui-icon layui-timeline-axis"></i>
+                    <div class="layui-timeline-content layui-text">
+                        <div class="layui-timeline-title">过去</div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="layui-col-xs6">
+        <div class="grid-demo">
+
+
+
+
+
+
+
+            <div class="layui-row">
+                <tr>请给出我们宝贵的意见/建议/投诉信息</tr>
+            </div>
+                <div class="layui-row">
+                    <tr>我们会及时回复</tr>
+
+                    <blockquote class="layui-elem-quote layui-quote-nm">
+                        <span class="layui-badge-dot"></span>
+                        <span class="layui-badge-dot layui-bg-orange"></span>
+                        <span class="layui-badge-dot layui-bg-green"></span>
+                        <span class="layui-badge-dot layui-bg-cyan"></span>
+                        <span class="layui-badge-dot layui-bg-blue"></span>
+                        <span class="layui-badge-dot layui-bg-black"></span>
+                        <span class="layui-badge-dot layui-bg-gray"></span>
+                    </blockquote>
+                </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+                <legend></legend>
+            </fieldset>
+
+
+            <form class="layui-form" action="" method="post">
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">姓名</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="personname" lay-verify="personname" autocomplete="off" placeholder="请输入姓名" class="layui-input" required>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">联系方式</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="personphone" lay-verify="personphone" autocomplete="off" placeholder="请输入联系方式" class="layui-input" required>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">单选框</label>
+                    <div class="layui-input-block">
+                        <input type="radio" name="persontype" value="老师" title="老师" checked="">
+                        <input type="radio" name="persontype" value="学生" title="学生">
+                    </div>
+                </div>
+                <div class="layui-form-item layui-form-text">
+                    <label class="layui-form-label">反馈内容</label>
+                    <div class="layui-input-block">
+                        <textarea placeholder="请输入内容"  name="personsuggest" class="layui-textarea" required></textarea>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button type="submit" class="layui-btn" lay-submit="" lay-filter="demo1">立即提交</button>
+                        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<script type="text/javascript" src="/resources/layui/layui.js"></script>
+<script>
+    layui.use(['dropdown', 'util', 'layer'], function(){
+        var element = layui.element;
+        var layer = layui.layer;
+
+        //监听折叠
+        element.on('collapse(test)', function(data){
+            layer.msg('展开状态：'+ data.show);
+        });
+    });
+</script>
+<script type="text/javascript">
+    var tableIns;
+    var myEchartData;
+    layui.use('carousel', function(){
+        var carousel = layui.carousel;
+        //建造实例
+        carousel.render({
+            elem: '#test1'
+            ,width: '100%' //设置容器宽度
+            ,height: '500px'
+            ,arrow: 'always' //始终显示箭头
+            //,anim: 'updown' //切换动画方式
+        });
+    });
+    layui.use(['jquery', 'form', 'layer', 'laydate', 'table'], function () {
+        var $ = layui.jquery;
+        var form = layui.form;
+        var layer = layui.layer;
+        var laydate = layui.laydate;
+        var table = layui.table;
+        $.post("/notice/loadAllNotice",function (res) {
+            console.log("开始执行post==================notice");
+            noticedata=res.data;
+            console.log(noticedata);
+
+            var html1;
+            var html2;
+            var html3;
+            var html4;
+
+            html1+="公告标题："+noticedata[0].title;
+            html1+="<br>"+noticedata[0].content;
+
+
+            html2+="建议人："+noticedata[1].title;
+            html2+="<br>"+noticedata[1].content;
+
+
+            html3+="建议人："+noticedata[2].title;
+            html3+="<br>"+noticedata[2].content;
+
+
+            html4+="建议人："+noticedata[3].title;
+            html4+="<br>"+noticedata[3].content;
+
+            $("#notice1").html(html1);
+            $("#notice2").html(html2);
+            $("#notice3").html(html3);
+            $("#notice4").html(html4);
+
+
+            console.log("执行完了post");
+        });
+
+        $.post("/suggest/loadAllsuggest",function (res) {
+            console.log("开始执行post==============================");
+            suggestdata=res.data;
+            console.log(suggestdata);
+            var html=suggestdata;
+            $("#content").html(suggestdata);
+            var name=suggestdata[1].personname;
+            var html1="";
+            var html2="";
+            var html3="";
+            var html4="";
+
+            html1+="  <span class=\"layui-badge layui-bg-green\">建议人：</span>"+suggestdata[0].personname;
+            html1+="<br>"+"<span class=\"layui-badge layui-bg-green\">类型：</span>"+suggestdata[0].persontype;
+            html1+="<br>"+"<span class=\"layui-badge layui-bg-green\">意见/建议：</span>"+suggestdata[0].personsuggest;
+            html1+="<br>"+"<span class=\"layui-badge layui-bg-green\">回复：</span>"+suggestdata[0].personapply;
+
+            html2+="  <span class=\"layui-badge layui-bg-green\">建议人：</span>"+suggestdata[1].personname;
+            html2+="<br>"+"<span class=\"layui-badge layui-bg-green\">类型：</span>"+suggestdata[1].persontype;
+            html2+="<br>"+"<span class=\"layui-badge layui-bg-green\">意见/建议：</span>"+suggestdata[1].personsuggest;
+            html2+="<br>"+"<span class=\"layui-badge layui-bg-green\">回复：</span>"+suggestdata[1].personapply;
+
+            html3+="  <span class=\"layui-badge layui-bg-green\">建议人：</span>"+suggestdata[2].personname;
+            html3+="<br>"+"<span class=\"layui-badge layui-bg-green\">类型：</span>"+suggestdata[2].persontype;
+            html3+="<br>"+"<span class=\"layui-badge layui-bg-green\">意见/建议：</span>"+suggestdata[2].personsuggest;
+            html3+="<br>"+"<span class=\"layui-badge layui-bg-green\">回复：</span>"+suggestdata[2].personapply;
+
+            html4+="  <span class=\"layui-badge layui-bg-green\">建议人：</span>"+suggestdata[3].personname;
+            html4+="<br>"+"<span class=\"layui-badge layui-bg-green\">类型：</span>"+suggestdata[3].persontype;
+            html4+="<br>"+"<span class=\"layui-badge layui-bg-green\">意见/建议：</span>"+suggestdata[3].personsuggest;
+            html4+="<br>"+"<span class=\"layui-badge layui-bg-green\">回复：</span>"+suggestdata[3].personapply;
+            $("#sugget1").html(html1);
+            $("#sugget2").html(html2);
+            $("#sugget3").html(html3);
+            $("#sugget4").html(html4);
+
+
+            console.log("执行完了post");
+        });
+
+
+
+        form.on('submit(demo1)', function(data){
+            console.log("进入了post----******-------------------------");
+            console.log(data.personname);
+            console.log(data.personphone);
+            $.post("/stu/Addsuggest",{
+
+                personname: data.personname,
+                personphone: data.personphone,
+                persontype: data.persontype,
+                personsuggest: data.personsuggest,
+
+            },function (res) {
+                if (res.code==200){
+                    tableIns.reload();
+                    //提示操作是否成功，且关闭弹出层
+                    layer.msg(res.msg);
+                }
+                console.log("进入了post-----------------------------");
+                console.log("执行完了post");
+            });
+        });
+
+
+
+
+
+
+    });
+
+</script>
+
+</body>
+</html>

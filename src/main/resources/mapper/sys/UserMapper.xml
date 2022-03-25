@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yeqifu.sys.mapper.UserMapper">
+    <select id="getIdByLoginName" resultType="Integer" parameterType="String">
+        select id
+        from sys_user where loginname = #{loginName}
+    </select>
+
+
+
+</mapper>
